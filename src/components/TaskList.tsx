@@ -76,22 +76,24 @@ export const TaskList = () => {
                         </div>
                         <div>
                           <input
-                            type="date"
-                            value={task.startDate}
+                            type="text"
+                            value={format(new Date(task.startDate), "yyyy-MM-dd")}
                             onChange={(e) =>
                               updateTask(task.id, { startDate: e.target.value })
                             }
                             className="editable-cell w-full"
+                            placeholder="YYYY-MM-DD"
                           />
                         </div>
                         <div>
                           <input
-                            type="date"
-                            value={task.endDate}
+                            type="text"
+                            value={format(new Date(task.endDate), "yyyy-MM-dd")}
                             onChange={(e) =>
                               updateTask(task.id, { endDate: e.target.value })
                             }
                             className="editable-cell w-full"
+                            placeholder="YYYY-MM-DD"
                           />
                         </div>
                       </div>

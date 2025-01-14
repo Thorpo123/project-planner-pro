@@ -40,10 +40,11 @@ export const ProjectHeader = () => {
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">Start Date</span>
             <input
-              type="date"
-              value={projectData.startDate}
+              type="text"
+              value={format(new Date(projectData.startDate), "yyyy-MM-dd")}
               onChange={(e) => updateProjectData({ startDate: e.target.value })}
-              className="editable-cell font-medium"
+              className="editable-cell font-medium w-32 text-right"
+              placeholder="YYYY-MM-DD"
             />
           </div>
         </div>
