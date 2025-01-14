@@ -1,6 +1,8 @@
 import { useProject } from "./ProjectContext";
-import { format, isValid, parseISO } from "date-fns";
+import { format, isValid, parseISO, addDays } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Button } from "./ui/button";
+import { CalendarDays } from "lucide-react";
 
 export const TaskList = () => {
   const { projectData, updateTask, reorderTasks } = useProject();
@@ -13,6 +15,17 @@ export const TaskList = () => {
   const formatDate = (dateString: string) => {
     const date = parseISO(dateString);
     return isValid(date) ? format(date, "dd-MM-yyyy") : "Invalid date";
+  };
+
+  const setTaskToToday = (taskId: string, duration: number) => {
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    const endDate = addDays(today, duration).toISOString().split('T')[0];
+    
+    updateTask(taskId, {
+      startDate: todayStr,
+      endDate: endDate
+    });
   };
 
   return (
@@ -38,7 +51,7 @@ export const TaskList = () => {
                       {...provided.dragHandleProps}
                       className="task-row p-4 rounded-lg"
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-center">
                         <div className="md:col-span-2">
                           <div
                             className="editable-cell"
@@ -98,6 +111,17 @@ export const TaskList = () => {
                             }
                             className="editable-cell w-full"
                           />
+                        </div>
+                        <div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setTaskToToday(task.id, task.duration)}
+                            className="w-full"
+                          >
+                            <CalendarDays className="w-4 h-4 mr-2" />
+                            Set to Today
+                          </Button>
                         </div>
                       </div>
                     </div>
