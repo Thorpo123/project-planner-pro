@@ -22,28 +22,17 @@ export const TaskTimeline = () => {
       <div className="min-w-[800px]">
         <div className="grid grid-cols-[200px_1fr] gap-4">
           <div className="font-medium">Timeline</div>
-          <div className="space-y-2">
-            {/* Single date row */}
+          <div>
+            {/* Date row */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
               {days.map((day, index) => (
                 <div
                   key={day.toISOString()}
                   className={`text-center text-sm ${
-                    index % 7 === 0 ? "font-medium" : ""
+                    index % 7 === 0 ? "font-medium" : "text-gray-500"
                   }`}
                 >
-                  {format(day, "dd-MM")}
-                </div>
-              ))}
-            </div>
-            {/* Single week number row */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
-              {Array.from({ length: Math.ceil(days.length / 7) }).map((_, index) => (
-                <div
-                  key={`week-${index}`}
-                  className="text-center text-xs text-gray-400 col-span-7"
-                >
-                  Week {index + 1}
+                  {format(day, "MMM d")}
                 </div>
               ))}
             </div>
