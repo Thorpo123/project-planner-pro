@@ -1,5 +1,5 @@
 import { useProject } from "./ProjectContext";
-import { format, eachDayOfInterval, addDays } from "date-fns";
+import { format, eachDayOfInterval, addDays, startOfWeek, differenceInWeeks } from "date-fns";
 
 export const TaskTimeline = () => {
   const { projectData } = useProject();
@@ -14,23 +14,41 @@ export const TaskTimeline = () => {
   );
 
   const days = eachDayOfInterval({ start: startDate, end: endDate });
+  const firstWeekStart = startOfWeek(startDate);
+  const totalWeeks = Math.ceil(differenceInWeeks(endDate, firstWeekStart)) + 1;
 
   return (
     <div className="glass-card rounded-xl p-6 overflow-x-auto timeline-scroll">
       <div className="min-w-[800px]">
         <div className="grid grid-cols-[200px_1fr] gap-4">
           <div className="font-medium">Timeline</div>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
-            {days.map((day, index) => (
-              <div
-                key={day.toISOString()}
-                className={`text-center text-sm ${
-                  index % 7 === 0 ? "font-medium" : "text-gray-500"
-                }`}
-              >
-                {format(day, "d")}
-              </div>
-            ))}
+          <div className="space-y-2">
+            {/* Date row */}
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+              {days.map((day, index) => (
+                <div
+                  key={day.toISOString()}
+                  className={`text-center text-sm ${
+                    index % 7 === 0 ? "font-medium" : "text-gray-500"
+                  }`}
+                >
+                  {format(day, "MMM d")}
+                </div>
+              ))}
+            </div>
+            {/* Week numbers row */}
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+              {Array.from({ length: days.length }).map((_, index) => (
+                <div
+                  key={`week-${index}`}
+                  className={`text-center text-xs text-gray-400 ${
+                    index % 7 === 0 ? "font-medium" : ""
+                  }`}
+                >
+                  {Math.floor(index / 7) + 1}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="mt-4 space-y-4">
