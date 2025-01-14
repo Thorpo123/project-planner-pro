@@ -41,10 +41,10 @@ export const ProjectHeader = () => {
             <span className="text-sm text-gray-500">Start Date</span>
             <input
               type="text"
-              value={format(new Date(projectData.startDate), "yyyy-MM-dd")}
+              value={format(new Date(projectData.startDate), "dd-MM-yyyy")}
               onChange={(e) => updateProjectData({ startDate: e.target.value })}
               className="editable-cell font-medium w-32 text-right"
-              placeholder="YYYY-MM-DD"
+              placeholder="DD-MM-YYYY"
             />
           </div>
         </div>
