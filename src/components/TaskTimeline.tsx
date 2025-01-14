@@ -1,7 +1,7 @@
+import React, { useCallback, useRef, useState } from "react";
 import { useProject } from "./ProjectContext";
-import { format, eachDayOfInterval, addDays, parseISO } from "date-fns";
+import { format, eachDayOfInterval, addDays } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useCallback, useRef, useState } from "react";
 
 export const TaskTimeline = () => {
   const { projectData, reorderTasks, updateTask } = useProject();
