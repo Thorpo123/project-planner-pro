@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { addDays } from "date-fns";
 
 interface Task {
   id: string;
@@ -59,6 +60,7 @@ interface ProjectContextType {
   updateTask: (taskId: string, updates: Partial<Task>) => void;
   updateProjectData: (updates: Partial<ProjectData>) => void;
   reorderTasks: (startIndex: number, endIndex: number) => void;
+  createTask: (name: string, duration: number, startDate: string) => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -91,8 +93,26 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
     });
   };
 
+  const createTask = (name: string, duration: number, startDate: string) => {
+    const endDate = addDays(new Date(startDate), duration).toISOString().split('T')[0];
+    const newTask: Task = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      assignedTo: "",
+      progress: 0,
+      startDate,
+      endDate,
+      duration,
+    };
+
+    setProjectData((prev) => ({
+      ...prev,
+      tasks: [...prev.tasks, newTask],
+    }));
+  };
+
   return (
-    <ProjectContext.Provider value={{ projectData, updateTask, updateProjectData, reorderTasks }}>
+    <ProjectContext.Provider value={{ projectData, updateTask, updateProjectData, reorderTasks, createTask }}>
       {children}
     </ProjectContext.Provider>
   );
