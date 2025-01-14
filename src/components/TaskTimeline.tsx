@@ -25,6 +25,10 @@ export const TaskTimeline = () => {
   );
 
   const days = eachDayOfInterval({ start: startDate, end: endDate });
+  
+  // Calculate minimum width per day to ensure proper spacing
+  const minDayWidth = 30; // minimum width in pixels for each day
+  const totalWidth = days.length * minDayWidth;
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -77,7 +81,6 @@ export const TaskTimeline = () => {
     setResizing(null);
   };
 
-  // Add and remove event listeners for resize
   React.useEffect(() => {
     if (resizing) {
       window.addEventListener("mousemove", handleResizeMove);
@@ -91,10 +94,10 @@ export const TaskTimeline = () => {
 
   return (
     <div className="glass-card rounded-xl p-6 animate-slide-in">
-      <div className="space-y-6">
-        <div className="grid grid-cols-[200px_1fr] gap-4">
+      <div className="space-y-6 overflow-x-auto timeline-scroll">
+        <div className="grid grid-cols-[200px_1fr] gap-4" style={{ minWidth: totalWidth + 200 }}>
           <div />
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+          <div className="grid" style={{ gridTemplateColumns: `repeat(${days.length}, minmax(${minDayWidth}px, 1fr))` }}>
             {days.map((day) => (
               <div
                 key={day.toISOString()}
@@ -113,6 +116,7 @@ export const TaskTimeline = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 className="space-y-4"
+                style={{ minWidth: totalWidth + 200 }}
               >
                 {projectData.tasks.map((task, index) => {
                   const taskStart = new Date(task.startDate);
@@ -148,8 +152,7 @@ export const TaskTimeline = () => {
                             </div>
                           </div>
                           <div className="relative h-8" ref={timelineRef}>
-                            {/* Background grid lines */}
-                            <div className="absolute inset-0 grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+                            <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${days.length}, minmax(${minDayWidth}px, 1fr))` }}>
                               {days.map((day) => (
                                 <div
                                   key={day.toISOString()}
@@ -158,7 +161,6 @@ export const TaskTimeline = () => {
                               ))}
                             </div>
 
-                            {/* Task bar */}
                             <div
                               className="absolute h-6 top-1 rounded-full bg-black/5 group-hover:bg-black/10 transition-colors duration-200"
                               style={{
@@ -166,7 +168,6 @@ export const TaskTimeline = () => {
                                 width: `${((duration + 1) / days.length) * 100}%`,
                               }}
                             >
-                              {/* Left resize handle */}
                               <div
                                 className="absolute left-0 top-0 bottom-0 w-2 cursor-ew-resize hover:bg-blue-500/50 rounded-l-full"
                                 onMouseDown={() =>
@@ -174,7 +175,6 @@ export const TaskTimeline = () => {
                                 }
                               />
 
-                              {/* Progress bar */}
                               <div
                                 className="h-full rounded-full bg-blue-500"
                                 style={{
@@ -182,7 +182,6 @@ export const TaskTimeline = () => {
                                 }}
                               />
 
-                              {/* Right resize handle */}
                               <div
                                 className="absolute right-0 top-0 bottom-0 w-2 cursor-ew-resize hover:bg-blue-500/50 rounded-r-full"
                                 onMouseDown={() => handleResizeStart(task.id, "end")}
