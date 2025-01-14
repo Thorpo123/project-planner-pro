@@ -1,5 +1,5 @@
 import { useProject } from "./ProjectContext";
-import { format, eachDayOfInterval, addDays, startOfWeek, differenceInWeeks } from "date-fns";
+import { format, eachDayOfInterval, startOfWeek, differenceInWeeks } from "date-fns";
 
 export const TaskTimeline = () => {
   const { projectData } = useProject();
@@ -23,29 +23,27 @@ export const TaskTimeline = () => {
         <div className="grid grid-cols-[200px_1fr] gap-4">
           <div className="font-medium">Timeline</div>
           <div className="space-y-2">
-            {/* Date row */}
+            {/* Single date row */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
               {days.map((day, index) => (
                 <div
                   key={day.toISOString()}
                   className={`text-center text-sm ${
-                    index % 7 === 0 ? "font-medium" : "text-gray-500"
-                  }`}
-                >
-                  {format(day, "MMM d")}
-                </div>
-              ))}
-            </div>
-            {/* Week numbers row */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
-              {Array.from({ length: days.length }).map((_, index) => (
-                <div
-                  key={`week-${index}`}
-                  className={`text-center text-xs text-gray-400 ${
                     index % 7 === 0 ? "font-medium" : ""
                   }`}
                 >
-                  {Math.floor(index / 7) + 1}
+                  {format(day, "dd-MM")}
+                </div>
+              ))}
+            </div>
+            {/* Single week number row */}
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+              {Array.from({ length: Math.ceil(days.length / 7) }).map((_, index) => (
+                <div
+                  key={`week-${index}`}
+                  className="text-center text-xs text-gray-400 col-span-7"
+                >
+                  Week {index + 1}
                 </div>
               ))}
             </div>
