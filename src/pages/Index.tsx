@@ -1,13 +1,19 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { ProjectHeader } from "@/components/ProjectHeader";
+import { TaskTimeline } from "@/components/TaskTimeline";
+import { TaskList } from "@/components/TaskList";
+import { ProjectProvider } from "@/components/ProjectContext";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <ProjectProvider>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 animate-fade-in">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <ProjectHeader />
+          <TaskTimeline />
+          <TaskList />
+        </div>
       </div>
-    </div>
+    </ProjectProvider>
   );
 };
 
