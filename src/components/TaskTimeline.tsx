@@ -1,9 +1,10 @@
 import { useProject } from "./ProjectContext";
-import { format, eachDayOfInterval, startOfWeek, differenceInWeeks } from "date-fns";
+import { format, eachDayOfInterval, startOfWeek, differenceInWeeks, parseISO, isValid } from "date-fns";
 
 export const TaskTimeline = () => {
   const { projectData } = useProject();
 
+  // Find the earliest start date and latest end date across all tasks
   const startDate = new Date(
     Math.min(
       ...projectData.tasks.map((task) => new Date(task.startDate).getTime())
@@ -46,7 +47,7 @@ export const TaskTimeline = () => {
               Math.round(
                 (taskStart.getTime() - startDate.getTime()) /
                   (1000 * 60 * 60 * 24)
-              ) + 1;
+              );
             const duration = Math.round(
               (taskEnd.getTime() - taskStart.getTime()) / (1000 * 60 * 60 * 24)
             );
@@ -54,15 +55,29 @@ export const TaskTimeline = () => {
             return (
               <div
                 key={task.id}
-                className="grid grid-cols-[200px_1fr] gap-4 items-center"
+                className="grid grid-cols-[200px_1fr] gap-4 items-center group"
               >
-                <div className="font-medium truncate">{task.name}</div>
-                <div className="relative h-6">
+                <div className="space-y-1">
+                  <div className="font-medium truncate">{task.name}</div>
+                  <div className="text-xs text-gray-500">{task.assignedTo}</div>
+                </div>
+                <div className="relative h-8">
+                  {/* Background grid lines */}
+                  <div className="absolute inset-0 grid grid-cols-[repeat(auto-fit,minmax(30px,1fr))]">
+                    {days.map((day) => (
+                      <div
+                        key={day.toISOString()}
+                        className="border-l border-gray-200 h-full"
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Task bar */}
                   <div
-                    className="absolute h-full rounded-full bg-black/10"
+                    className="absolute h-6 top-1 rounded-full bg-black/5 group-hover:bg-black/10 transition-colors duration-200"
                     style={{
                       left: `${(startOffset / days.length) * 100}%`,
-                      width: `${(duration / days.length) * 100}%`,
+                      width: `${((duration + 1) / days.length) * 100}%`,
                     }}
                   >
                     <div
