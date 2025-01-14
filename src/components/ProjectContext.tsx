@@ -57,6 +57,7 @@ const initialData: ProjectData = {
 interface ProjectContextType {
   projectData: ProjectData;
   updateTask: (taskId: string, updates: Partial<Task>) => void;
+  updateProjectData: (updates: Partial<ProjectData>) => void;
   reorderTasks: (startIndex: number, endIndex: number) => void;
 }
 
@@ -74,6 +75,13 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
     }));
   };
 
+  const updateProjectData = (updates: Partial<ProjectData>) => {
+    setProjectData((prev) => ({
+      ...prev,
+      ...updates,
+    }));
+  };
+
   const reorderTasks = (startIndex: number, endIndex: number) => {
     setProjectData((prev) => {
       const newTasks = [...prev.tasks];
@@ -84,7 +92,7 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   return (
-    <ProjectContext.Provider value={{ projectData, updateTask, reorderTasks }}>
+    <ProjectContext.Provider value={{ projectData, updateTask, updateProjectData, reorderTasks }}>
       {children}
     </ProjectContext.Provider>
   );
