@@ -1,5 +1,5 @@
 import { useProject } from "./ProjectContext";
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export const TaskList = () => {
@@ -8,6 +8,11 @@ export const TaskList = () => {
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
     reorderTasks(result.source.index, result.destination.index);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = parseISO(dateString);
+    return isValid(date) ? format(date, "dd-MM-yyyy") : "Invalid date";
   };
 
   return (
@@ -76,24 +81,22 @@ export const TaskList = () => {
                         </div>
                         <div>
                           <input
-                            type="text"
-                            value={format(new Date(task.startDate), "dd-MM-yyyy")}
+                            type="date"
+                            value={task.startDate}
                             onChange={(e) =>
                               updateTask(task.id, { startDate: e.target.value })
                             }
                             className="editable-cell w-full"
-                            placeholder="DD-MM-YYYY"
                           />
                         </div>
                         <div>
                           <input
-                            type="text"
-                            value={format(new Date(task.endDate), "dd-MM-yyyy")}
+                            type="date"
+                            value={task.endDate}
                             onChange={(e) =>
                               updateTask(task.id, { endDate: e.target.value })
                             }
                             className="editable-cell w-full"
-                            placeholder="DD-MM-YYYY"
                           />
                         </div>
                       </div>
